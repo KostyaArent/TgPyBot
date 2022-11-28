@@ -1,2 +1,4 @@
 greenlet==2.0.1
 SQLAlchemy==1.4.44
+
+emoji~=2.2.0
