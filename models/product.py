@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship, backref
 
 from models.category import Category
 
-
 Base = declarative_base()
 
 
