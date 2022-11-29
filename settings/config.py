@@ -1,9 +1,10 @@
 import os
 from emoji import emojize
+from decouple import config
 
 
-TG_TOKEN = os.environ.get("TG_TOKEN")
-NAME_DB = os.environ.get("NAME_DB")
+TG_TOKEN = config('TG_TOKEN')
+NAME_DB = config('NAME_DB')
 VERSION = '0.0.1'
 AUTHOR = 'KostyaArent'
 
@@ -32,4 +33,17 @@ KEYBOARD = {
     'UP': emojize('🔼'),
     'APPLAY': '✅ Оформить заказ',
     'COPY': '©️'
+}
+
+# id категорий продуктов
+CATEGORY = {
+    'PIZZA': 1,
+    'ICE_CREAM': 2,
+    'COFFEE': 3,
+}
+
+# названия команд
+COMMANDS = {
+    'START': "start",
+    'HELP': "help",
 }
