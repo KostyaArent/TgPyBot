@@ -19,7 +19,7 @@ class HandlerCommand(Handler):
                               reply_markup=self.keybords.start_menu())
 
     def handle(self):
-        @self.bot.message_handler(command=['start'])
+        @self.bot.message_handler(commands=['start'])
         def handle(message):
             print(type(message))
             if message.text == '/start':
