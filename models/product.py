@@ -1,10 +1,8 @@
 from sqlalchemy import Column, String, Integer, Boolean, Float, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+from data_base.dbcore import Base
 from sqlalchemy.orm import relationship, backref
 
 from models.category import Category
-
-Base = declarative_base()
 
 
 class Products(Base):

@@ -1,4 +1,8 @@
-from telebot.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telebot.types import (
+    KeyboardButton, ReplyKeyboardMarkup,
+    ReplyKeyboardRemove, InlineKeyboardMarkup,
+    InlineKeyboardButton)
+
 from settings import config
 from data_base.dbalchemy import DBManager
 
@@ -10,7 +14,7 @@ class Keyboards:
 
     def __init__(self):
         self.markup = None
-        self.DB = DBManager
+        self.DB = DBManager()
 
     def set_btn(self, name, step=0, quantity=0):
         """
@@ -67,3 +71,19 @@ class Keyboards:
         self.markup.row(self.set_btn('<<'), self.set_btn('ORDER'))
         return self.markup
 
+    def set_inline_btn(self, name):
+        """
+        Создает и возвращает инлайн кнопку по входным параметрам
+        """
+        return InlineKeyboardButton(str(name),
+                                    callback_data=str(name.id))
+
+    def select_set_category(self, category):
+        """
+        Создает разметку инлайн-кнопок в выбранной
+        категории товара и возвращает разметку
+        """
+        self.markup = InlineKeyboardMarkup(row_width=1)
+        for item in self.DB.select_all_products_category(category):
+            self.markup.add(self.set_inline_btn(item))
+        return self.markup
