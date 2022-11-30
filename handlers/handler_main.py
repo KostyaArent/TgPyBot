@@ -14,4 +14,3 @@ class HandlerMain:
     def handle(self):
         self.handler_commands.handle()
         self.handler_all_text.handle()
-        self.handler_all_text.handle()

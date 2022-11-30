@@ -1,4 +1,4 @@
-from telebot.types import KeyboardButton, ReplyKeyboardMarkup
+from telebot.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from settings import config
 from data_base.dbalchemy import DBManager
 
@@ -49,3 +49,21 @@ class Keyboards:
         itm_btn_1 = self.set_btn('<<')
         self.markup.row(itm_btn_1)
         return self.markup
+
+    def remove_menu(self):
+        """
+        Очищает данные кнопки и возвращает
+        """
+        return ReplyKeyboardRemove()
+
+    def category_menu(self):
+        """
+        Создает разметку кнопок в меню категорий товара и возвращает разметку
+        """
+        self.markup = ReplyKeyboardMarkup(True, True, row_width=1)
+        self.markup.add(self.set_btn('PIZZA'))
+        self.markup.add(self.set_btn('ICE_CREAM'))
+        self.markup.add(self.set_btn('COFFEE'))
+        self.markup.row(self.set_btn('<<'), self.set_btn('ORDER'))
+        return self.markup
+
