@@ -94,7 +94,8 @@ class HandlerAllText(Handler):
             self.BD.delete_order(count[self.step])
             self.BD.update_product_value(count[self.step], 'quantity',
                                          quantity_product)
-            self.step -= 1
+            if self.step != 0:
+                self.step -= 1
         count = self.BD.select_all_product_id()
 
         if count.__len__() > 0:
@@ -104,6 +105,28 @@ class HandlerAllText(Handler):
             self.bot.send_message(message.chat.id, MESSAGES['no_orders'],
                                   parse_mode="HTML",
                                   reply_markup=self.keybords.category_menu())
+
+    def pressed_btn_back_step(self, message):
+        """
+        Обрабатывает нажатие кнопки перемещения
+        на предыдущую позицию товара в заказе
+        """
+        if self.step > 0:
+            self.step -= 1
+        count = self.BD.select_all_product_id()
+        quantity = self.BD.select_order_quantity(count[self.step])
+        self.send_message_order(count[self.step], quantity, message)
+
+    def pressed_btn_next_step(self, message):
+        """
+        Обрабатывает нажатие кнопки перемещения
+        на следующую позицию товара в заказе
+        """
+        if self.step < self.BD.count_rows_order() - 1:
+            self.step += 1
+        count = self.BD.select_all_product_id()
+        quantity = self.BD.select_order_quantity(count[self.step])
+        self.send_message_order(count[self.step], quantity, message)
 
     def send_message_order(self, product_id, quantity, message):
         """
@@ -157,6 +180,12 @@ class HandlerAllText(Handler):
 
             if message.text == config.KEYBOARD['X']:
                 self.pressed_btn_x(message)
+
+            if message.text == config.KEYBOARD['BACK_STEP']:
+                self.pressed_btn_back_step(message)
+
+            if message.text == config.KEYBOARD['NEXT_STEP']:
+                self.pressed_btn_next_step(message)
 
             #  Меню, пицца, мороженное, кофе
             if message.text == config.KEYBOARD['PIZZA']:
