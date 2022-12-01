@@ -15,15 +15,16 @@ class HandlerInlineQuery(Handler):
         """
         Обрабатывает входящие запросы на нажатие inline-кнопок товара
         """
-        self.BD._add_orders(1, code, 1)
+        self.DB._add_orders(1, code, 1)
 
         self.bot.answer_callback_query(
             call.id,
             MESSAGES['product_order'].format(
-                self.BD.select_single_product_name(code),
-                self.BD.select_single_product_title(code),
-                self.BD.select_single_product_price(code),
-                self.BD.select_single_product_quantity(code)),
+                self.DB.select_single_product_category(code),
+                self.DB.select_single_product_name(code),
+                self.DB.select_single_product_title(code),
+                self.DB.select_single_product_price(code),
+                self.DB.select_single_product_quantity(code)),
             show_alert=True)
 
     def handle(self):

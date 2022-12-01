@@ -8,7 +8,7 @@ class Handler(metaclass=abc.ABCMeta):
     def __init__(self, bot):
         self.bot = bot
         self.keybords = Keyboards()
-        self.BD = DBManager()
+        self.DB = DBManager()
 
     @abc.abstractmethod
     def handle(self):

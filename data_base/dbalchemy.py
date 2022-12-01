@@ -4,6 +4,7 @@ from os import path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from data_base.dbcore import Base
+from models.category import Category
 from models.order import Order
 
 from settings import config, utility
@@ -64,6 +65,15 @@ class DBManager(metaclass=Singleton):
             product_id=product_id).update({name: value})
         self._session.commit()
         self.close()
+
+    def select_single_product_category(self, rownum):
+        """
+        Возвращает название товара
+        в соответствии с номером товара - rownum
+        """
+        result = self._session.query(Category).join(Products).filter(Products.id == rownum).one()
+        self.close()
+        return result.name
 
     def select_single_product_name(self, rownum):
         """
@@ -148,6 +158,14 @@ class DBManager(metaclass=Singleton):
         self.close()
         return result.quantity
 
+    def select_all_order_id(self):
+        """
+        Возвращает все id заказа
+        """
+        result = self._session.query(Order.id).all()
+        self.close()
+        return utility._convert(result)
+
     def count_rows_order(self):
         """
         Возвращает количество позиций в заказе
@@ -162,6 +180,16 @@ class DBManager(metaclass=Singleton):
         """
         self._session.query(Order).filter_by(product_id=product_id).delete()
         self._session.commit()
+        self.close()
+
+    def delete_all_order(self):
+        """
+        Удаляет данные всего заказа
+        """
+        all_id_orders = self.select_all_order_id()
+        for itm in all_id_orders:
+            self._session.query(Order).filter_by(id=itm).delete()
+            self._session.commit()
         self.close()
 
     def close(self):

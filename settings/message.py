@@ -58,7 +58,7 @@ settings = """
 
 product_order = """
 Выбранны:
-
+{}
 {}
 {}
 Cтоимость: {} руб
@@ -68,6 +68,7 @@ Cтоимость: {} руб
 """
 
 order = """
+<i>Категория:</i> <b>{}</b>
 
 <i>Название:</i> <b>{}</b>
 
@@ -104,6 +105,6 @@ MESSAGES = {
     'order': order,
     'order_number': order_number,
     'no_orders': no_orders,
-    'applay': applay,
+    'apply': applay,
     'settings': settings
 }
