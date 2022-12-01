@@ -44,6 +44,42 @@ class HandlerAllText(Handler):
         quantity = self.BD.select_order_quantity(count[self.step])
         self.send_message_order(count[self.step], quantity, message)
 
+    def pressed_btn_up(self, message):
+        """
+        Обработка нажатия кнопки увеличения
+        количества определенного товара в заказе
+        """
+        count = self.BD.select_all_product_id()
+        quantity_order = self.BD.select_order_quantity(count[self.step])
+        quantity_product = self.BD.select_single_product_quantity(
+            count[self.step])
+        if quantity_product > 0:
+            quantity_order += 1
+            quantity_product -= 1
+            self.BD.update_order_value(count[self.step],
+                                       'quantity', quantity_order)
+            self.BD.update_product_value(count[self.step],
+                                         'quantity', quantity_product)
+        self.send_message_order(count[self.step], quantity_order, message)
+
+    def pressed_btn_douwn(self, message):
+        """
+        Обработка нажатия кнопки уменьшения
+        количества определенного товара в заказе
+        """
+        count = self.BD.select_all_product_id()
+        quantity_order = self.BD.select_order_quantity(count[self.step])
+        quantity_product = self.BD.select_single_product_quantity(
+            count[self.step])
+        if quantity_order > 0:
+            quantity_order -= 1
+            quantity_product += 1
+            self.BD.update_order_value(count[self.step],
+                                       'quantity', quantity_order)
+            self.BD.update_product_value(count[self.step],
+                                         'quantity', quantity_product)
+        self.send_message_order(count[self.step], quantity_order, message)
+
     def send_message_order(self, product_id, quantity, message):
         """
         Отправляет ответ пользователю при выполнении различных действий
@@ -76,9 +112,6 @@ class HandlerAllText(Handler):
             if message.text == config.KEYBOARD['CHOOSE_GOODS']:
                 self.pressed_btn_category(message)
 
-            if message.text == config.KEYBOARD['<<']:
-                self.pressed_btn_back(message)
-
             if message.text == config.KEYBOARD['ORDER']:
                 if self.BD.count_rows_order() > 0:
                     self.pressed_btn_order(message)
@@ -86,6 +119,16 @@ class HandlerAllText(Handler):
                     self.bot.send_message(message.chat.id, MESSAGES['no_orders'],
                                           parse_mode="HTML",
                                           reply_markup=self.keybords.category_menu())
+
+            if message.text == config.KEYBOARD['<<']:
+                self.pressed_btn_back(message)
+
+            # Управление заказом
+            if message.text == config.KEYBOARD['UP']:
+                self.pressed_btn_up(message)
+
+            if message.text == config.KEYBOARD['DOWN']:
+                self.pressed_btn_douwn(message)
 
             #  Меню, пицца, мороженное, кофе
             if message.text == config.KEYBOARD['PIZZA']:
