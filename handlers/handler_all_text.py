@@ -62,7 +62,7 @@ class HandlerAllText(Handler):
                                          'quantity', quantity_product)
         self.send_message_order(count[self.step], quantity_order, message)
 
-    def pressed_btn_douwn(self, message):
+    def pressed_btn_down(self, message):
         """
         Обработка нажатия кнопки уменьшения
         количества определенного товара в заказе
@@ -79,6 +79,31 @@ class HandlerAllText(Handler):
             self.BD.update_product_value(count[self.step],
                                          'quantity', quantity_product)
         self.send_message_order(count[self.step], quantity_order, message)
+
+    def pressed_btn_x(self, message):
+        """
+        Обрабатывает нажатие кнопки удаления товара в заказе
+        """
+        count = self.BD.select_all_product_id()
+
+        if count.__len__() > 0:
+            quantity_order = self.BD.select_order_quantity(count[self.step])
+            quantity_product = self.BD.select_single_product_quantity(
+                count[self.step])
+            quantity_product += quantity_order
+            self.BD.delete_order(count[self.step])
+            self.BD.update_product_value(count[self.step], 'quantity',
+                                         quantity_product)
+            self.step -= 1
+        count = self.BD.select_all_product_id()
+
+        if count.__len__() > 0:
+            quantity_order = self.BD.select_order_quantity(count[self.step])
+            self.send_message_order(count[self.step], quantity_order, message)
+        else:
+            self.bot.send_message(message.chat.id, MESSAGES['no_orders'],
+                                  parse_mode="HTML",
+                                  reply_markup=self.keybords.category_menu())
 
     def send_message_order(self, product_id, quantity, message):
         """
@@ -128,7 +153,10 @@ class HandlerAllText(Handler):
                 self.pressed_btn_up(message)
 
             if message.text == config.KEYBOARD['DOWN']:
-                self.pressed_btn_douwn(message)
+                self.pressed_btn_down(message)
+
+            if message.text == config.KEYBOARD['X']:
+                self.pressed_btn_x(message)
 
             #  Меню, пицца, мороженное, кофе
             if message.text == config.KEYBOARD['PIZZA']:
