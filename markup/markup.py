@@ -20,6 +20,13 @@ class Keyboards:
         """
         Создает и возвращает кнопку по входным параметрам
         """
+        if name == "AMOUNT_ORDERS":
+            config.KEYBOARD["AMOUNT_ORDERS"] = "{} {} {}".format(step + 1,
+                                                                 ' из ', str(
+                    self.DB.count_rows_order()))
+
+        if name == "AMOUNT_PRODUCT":
+            config.KEYBOARD["AMOUNT_PRODUCT"] = "{}".format(quantity)
 
         return KeyboardButton(config.KEYBOARD[name])
 
